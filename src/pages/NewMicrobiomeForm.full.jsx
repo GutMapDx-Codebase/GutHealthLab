@@ -11,6 +11,26 @@ export default function NewMicrobiomeForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [kitTypes, setKitTypes] = useState([]);
 
+const allowedKitTypes = [
+  "GI Axis Microbiome",
+  "GI Axis Microbial Screen",
+  "GI Axis Advanced",
+  "Oral Microbiome",
+  "Food Sensitivity Map 130",
+  "Food Sensitivity Map 270",
+  "Food Sensitivity Map Advanced",
+  "Food Sensitivity 95",
+  "Food Sensitivity Vegan",
+  "Food Sensitivity Junior",
+  "CRP",
+  "DNAMap Health and Nutrition",
+  "DNAMap ADHD and Autism",
+  "DNAMap Male Fertility",
+  "DNAMap Female Fertility",
+  "DNAMap Hair and Skin"
+];
+
+
   const fetchKittypes = async () => {
     const response = await getkittypes();
     await setKitTypes(response.data.kitTypes);
@@ -635,12 +655,21 @@ const oldkittypes = [
                 </option>
               ))} */}
               <option value="" selected disabled >Please Select KIT Type</option>
-               {
+               {/* {
                 kitTypes?.map((value,index)=>{
                  if (oldkittypes.includes(value)) return null;
                   return (<option key={index} value={value}>{value}</option>)
                 })
-               }
+               } */}
+               {allowedKitTypes
+  .filter(type => !oldkittypes.includes(type))   // remove old ones
+  .map((type, index) => (
+    <option key={index} value={type}>
+      {type}
+    </option>
+  ))
+}
+
             </select>
           </div>
           <div className="form-group kitid-group">

@@ -10,8 +10,6 @@ export default function RegisterYourFST() {
   const [showThankYou, setShowThankYou] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-
-
   useEffect(() => {
     if (showThankYou) {
       setTimeout(() => {
@@ -39,7 +37,7 @@ export default function RegisterYourFST() {
 
   const submitKitForm = async (data) => {
     // const portalId = "67c17d743394a458c944eec2";
-        const  portalId="67ef8f3a291b7c6b9f6752cf"
+        const  portalId="67c17d743394a458c944eec2"
     const config = configMaker("post", "submitkitform", {
       portalId,
     });
@@ -82,27 +80,6 @@ export default function RegisterYourFST() {
   };
 
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // const nextErrors = {
-  //   //   health: form.health.length === 0 ? "Please select at least one option." : "",
-  //   //   diet: form.diet ? "" : "Please select your diet type.",
-  //   //   eatingHabits: form.eatingHabits.length === 0 ? "Please select at least one eating habit." : "",
-  //   // };
-  //   // setErrors(nextErrors);
-  //   // const hasError = Object.values(nextErrors).some((m) => m);
-  //   // if (hasError) return;
-  //   // Log full form data to console
-  //   // Using JSON stringify for easy readability
-  //   // eslint-disable-next-line no-console
-  //   let kitIdValue = form.kitId;
-  //   if (form.kitType === "FoodSensitivityMap") {
-  //     kitIdValue = `T4-${form.kitId}-YGM`;
-  //   }
-  //   const formToLog = { ...form, kitId: kitIdValue };
-  //   console.log("Form data:", JSON.parse(JSON.stringify(formToLog)));
-  //   alert("Form submitted!");
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
