@@ -1,7 +1,254 @@
 import React, { useEffect, useState } from "react";
 import "./NewMicrobiomeForm.full.css";
 import axios from "axios";
+import Select from "react-select";
 import ThankYouModal from "../component/thankYouModal";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import ErrorModal from "../component/ErrorModal";
+
+// Shared styles for all React Select components
+const customSelectStyles = {
+  control: (base) => ({
+    ...base,
+    backgroundColor: "#dcf0ff",
+    border: "none",
+    borderRadius: "10px",
+    padding: "0px 8px",
+    minHeight: "44px",
+    fontSize: "14px",
+    boxShadow: "none",
+    ":hover": {
+      border: "none",
+      boxShadow: "none",
+    },
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    padding: "0 0",
+  }),
+  indicatorsContainer: (base) => ({
+    ...base,
+    paddingRight: "8px",
+  }),
+  menu: (base) => ({
+    ...base,
+    backgroundColor: "#f5f8ff",
+    borderRadius: "8px",
+    border: "none",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+  }),
+  option: (base, state) => ({
+    ...base,
+    borderRadius: "6px",
+    padding: "10px 12px",
+     fontSize: "14px",
+    backgroundColor: state.isSelected
+      ? "#19b5ff"
+      : state.isFocused
+        ? "#e0f4ff"
+        : "white",
+    cursor: "pointer",
+    margin: "2px 4px",
+  }),
+};
+
+
+//   { value: "Afghanistan", label: "Afghanistan" },
+//   { value: "Albania", label: "Albania" },
+//   { value: "Algeria", label: "Algeria" },
+//   { value: "Andorra", label: "Andorra" },
+//   { value: "Angola", label: "Angola" },
+//   { value: "Argentina", label: "Argentina" },
+//   { value: "Armenia", label: "Armenia" },
+//   { value: "Australia", label: "Australia" },
+//   { value: "Austria", label: "Austria" },
+//   { value: "Azerbaijan", label: "Azerbaijan" },
+//   { value: "Bahamas", label: "Bahamas" },
+//   { value: "Bahrain", label: "Bahrain" },
+//   { value: "Bangladesh", label: "Bangladesh" },
+//   { value: "Barbados", label: "Barbados" },
+//   { value: "Belarus", label: "Belarus" },
+//   { value: "Belgium", label: "Belgium" },
+//   { value: "Belize", label: "Belize" },
+//   { value: "Benin", label: "Benin" },
+//   { value: "Bhutan", label: "Bhutan" },
+//   { value: "Bolivia", label: "Bolivia" },
+//   { value: "Bosnia and Herzegovina", label: "Bosnia and Herzegovina" },
+//   { value: "Botswana", label: "Botswana" },
+//   { value: "Brazil", label: "Brazil" },
+//   { value: "Brunei", label: "Brunei" },
+//   { value: "Bulgaria", label: "Bulgaria" },
+//   { value: "Burkina Faso", label: "Burkina Faso" },
+//   { value: "Burundi", label: "Burundi" },
+//   { value: "Cambodia", label: "Cambodia" },
+//   { value: "Cameroon", label: "Cameroon" },
+//   { value: "Canada", label: "Canada" },
+//   { value: "Cape Verde", label: "Cape Verde" },
+//   { value: "Central African Republic", label: "Central African Republic" },
+//   { value: "Chad", label: "Chad" },
+//   { value: "Chile", label: "Chile" },
+//   { value: "China", label: "China" },
+//   { value: "Colombia", label: "Colombia" },
+//   { value: "Comoros", label: "Comoros" },
+//   { value: "Congo", label: "Congo" },
+//   { value: "Costa Rica", label: "Costa Rica" },
+//   { value: "Croatia", label: "Croatia" },
+//   { value: "Cuba", label: "Cuba" },
+//   { value: "Cyprus", label: "Cyprus" },
+//   { value: "Czech Republic", label: "Czech Republic" },
+//   { value: "Denmark", label: "Denmark" },
+//   { value: "Djibouti", label: "Djibouti" },
+//   { value: "Dominica", label: "Dominica" },
+//   { value: "Dominican Republic", label: "Dominican Republic" },
+//   { value: "Ecuador", label: "Ecuador" },
+//   { value: "Egypt", label: "Egypt" },
+//   { value: "El Salvador", label: "El Salvador" },
+//   { value: "Equatorial Guinea", label: "Equatorial Guinea" },
+//   { value: "Eritrea", label: "Eritrea" },
+//   { value: "Estonia", label: "Estonia" },
+//   { value: "Ethiopia", label: "Ethiopia" },
+//   { value: "Fiji", label: "Fiji" },
+//   { value: "Finland", label: "Finland" },
+//   { value: "France", label: "France" },
+//   { value: "Gabon", label: "Gabon" },
+//   { value: "Gambia", label: "Gambia" },
+//   { value: "Georgia", label: "Georgia" },
+//   { value: "Germany", label: "Germany" },
+//   { value: "Ghana", label: "Ghana" },
+//   { value: "Greece", label: "Greece" },
+//   { value: "Grenada", label: "Grenada" },
+//   { value: "Guatemala", label: "Guatemala" },
+//   { value: "Guinea", label: "Guinea" },
+//   { value: "Guinea-Bissau", label: "Guinea-Bissau" },
+//   { value: "Guyana", label: "Guyana" },
+//   { value: "Haiti", label: "Haiti" },
+//   { value: "Honduras", label: "Honduras" },
+//   { value: "Hong Kong", label: "Hong Kong" },
+//   { value: "Hungary", label: "Hungary" },
+//   { value: "Iceland", label: "Iceland" },
+//   { value: "India", label: "India" },
+//   { value: "Indonesia", label: "Indonesia" },
+//   { value: "Iran", label: "Iran" },
+//   { value: "Iraq", label: "Iraq" },
+//   { value: "Ireland", label: "Ireland" },
+//   { value: "Israel", label: "Israel" },
+//   { value: "Italy", label: "Italy" },
+//   { value: "Jamaica", label: "Jamaica" },
+//   { value: "Japan", label: "Japan" },
+//   { value: "Jordan", label: "Jordan" },
+//   { value: "Kazakhstan", label: "Kazakhstan" },
+//   { value: "Kenya", label: "Kenya" },
+//   { value: "Kiribati", label: "Kiribati" },
+//   { value: "Kuwait", label: "Kuwait" },
+//   { value: "Kyrgyzstan", label: "Kyrgyzstan" },
+//   { value: "Laos", label: "Laos" },
+//   { value: "Latvia", label: "Latvia" },
+//   { value: "Lebanon", label: "Lebanon" },
+//   { value: "Lesotho", label: "Lesotho" },
+//   { value: "Liberia", label: "Liberia" },
+//   { value: "Libya", label: "Libya" },
+//   { value: "Liechtenstein", label: "Liechtenstein" },
+//   { value: "Lithuania", label: "Lithuania" },
+//   { value: "Luxembourg", label: "Luxembourg" },
+//   { value: "Macao", label: "Macao" },
+//   { value: "Madagascar", label: "Madagascar" },
+//   { value: "Malawi", label: "Malawi" },
+//   { value: "Malaysia", label: "Malaysia" },
+//   { value: "Maldives", label: "Maldives" },
+//   { value: "Mali", label: "Mali" },
+//   { value: "Malta", label: "Malta" },
+//   { value: "Marshall Islands", label: "Marshall Islands" },
+//   { value: "Mauritania", label: "Mauritania" },
+//   { value: "Mauritius", label: "Mauritius" },
+//   { value: "Mexico", label: "Mexico" },
+//   { value: "Micronesia", label: "Micronesia" },
+//   { value: "Moldova", label: "Moldova" },
+//   { value: "Monaco", label: "Monaco" },
+//   { value: "Mongolia", label: "Mongolia" },
+//   { value: "Montenegro", label: "Montenegro" },
+//   { value: "Morocco", label: "Morocco" },
+//   { value: "Mozambique", label: "Mozambique" },
+//   { value: "Myanmar", label: "Myanmar" },
+//   { value: "Namibia", label: "Namibia" },
+//   { value: "Nauru", label: "Nauru" },
+//   { value: "Nepal", label: "Nepal" },
+//   { value: "Netherlands", label: "Netherlands" },
+//   { value: "New Zealand", label: "New Zealand" },
+//   { value: "Nicaragua", label: "Nicaragua" },
+//   { value: "Niger", label: "Niger" },
+//   { value: "Nigeria", label: "Nigeria" },
+//   { value: "North Korea", label: "North Korea" },
+//   { value: "North Macedonia", label: "North Macedonia" },
+//   { value: "Norway", label: "Norway" },
+//   { value: "Oman", label: "Oman" },
+//   { value: "Pakistan", label: "Pakistan" },
+//   { value: "Palau", label: "Palau" },
+//   { value: "Palestine", label: "Palestine" },
+//   { value: "Panama", label: "Panama" },
+//   { value: "Papua New Guinea", label: "Papua New Guinea" },
+//   { value: "Paraguay", label: "Paraguay" },
+//   { value: "Peru", label: "Peru" },
+//   { value: "Philippines", label: "Philippines" },
+//   { value: "Poland", label: "Poland" },
+//   { value: "Portugal", label: "Portugal" },
+//   { value: "Qatar", label: "Qatar" },
+//   { value: "Romania", label: "Romania" },
+//   { value: "Russia", label: "Russia" },
+//   { value: "Rwanda", label: "Rwanda" },
+//   { value: "Saint Kitts and Nevis", label: "Saint Kitts and Nevis" },
+//   { value: "Saint Lucia", label: "Saint Lucia" },
+//   { value: "Saint Vincent and the Grenadines", label: "Saint Vincent and the Grenadines" },
+//   { value: "Samoa", label: "Samoa" },
+//   { value: "San Marino", label: "San Marino" },
+//   { value: "Sao Tome and Principe", label: "Sao Tome and Principe" },
+//   { value: "Saudi Arabia", label: "Saudi Arabia" },
+//   { value: "Senegal", label: "Senegal" },
+//   { value: "Serbia", label: "Serbia" },
+//   { value: "Seychelles", label: "Seychelles" },
+//   { value: "Sierra Leone", label: "Sierra Leone" },
+//   { value: "Singapore", label: "Singapore" },
+//   { value: "Slovakia", label: "Slovakia" },
+//   { value: "Slovenia", label: "Slovenia" },
+//   { value: "Solomon Islands", label: "Solomon Islands" },
+//   { value: "Somalia", label: "Somalia" },
+//   { value: "South Africa", label: "South Africa" },
+//   { value: "South Korea", label: "South Korea" },
+//   { value: "South Sudan", label: "South Sudan" },
+//   { value: "Spain", label: "Spain" },
+//   { value: "Sri Lanka", label: "Sri Lanka" },
+//   { value: "Sudan", label: "Sudan" },
+//   { value: "Suriname", label: "Suriname" },
+//   { value: "Sweden", label: "Sweden" },
+//   { value: "Switzerland", label: "Switzerland" },
+//   { value: "Syria", label: "Syria" },
+//   { value: "Taiwan", label: "Taiwan" },
+//   { value: "Tajikistan", label: "Tajikistan" },
+//   { value: "Tanzania", label: "Tanzania" },
+//   { value: "Thailand", label: "Thailand" },
+//   { value: "Timor-Leste", label: "Timor-Leste" },
+//   { value: "Togo", label: "Togo" },
+//   { value: "Tonga", label: "Tonga" },
+//   { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
+//   { value: "Tunisia", label: "Tunisia" },
+//   { value: "Turkey", label: "Turkey" },
+//   { value: "Turkmenistan", label: "Turkmenistan" },
+//   { value: "Tuvalu", label: "Tuvalu" },
+//   { value: "Uganda", label: "Uganda" },
+//   { value: "Ukraine", label: "Ukraine" },
+//   { value: "United Arab Emirates", label: "United Arab Emirates" },
+//   { value: "United Kingdom", label: "United Kingdom" },
+//   { value: "United States", label: "United States" },
+//   { value: "Uruguay", label: "Uruguay" },
+//   { value: "Uzbekistan", label: "Uzbekistan" },
+//   { value: "Vanuatu", label: "Vanuatu" },
+//   { value: "Vatican City", label: "Vatican City" },
+//   { value: "Venezuela", label: "Venezuela" },
+//   { value: "Vietnam", label: "Vietnam" },
+//   { value: "Yemen", label: "Yemen" },
+//   { value: "Zambia", label: "Zambia" },
+//   { value: "Zimbabwe", label: "Zimbabwe" }
+// ];
 
 export default function NewMicrobiomeForm() {
   // State for all fields
@@ -10,6 +257,29 @@ export default function NewMicrobiomeForm() {
   const [showThankYou, setShowThankYou] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [kitTypes, setKitTypes] = useState([]);
+  const[countries,setCountries]=useState([]);
+  const [consent, setConsent] = useState(false);
+  const [response, setResponse] = useState({});
+  const navigate = useNavigate()
+  const [showError, setShowError] = useState(false);
+  
+
+  const fetchCountries = async () => {
+        // setLoading(true);
+        try {
+          const response = await axios.get("https://restcountries.com/v3.1/all?fields=name");
+          const countryList = response.data.map((country) => ({
+            label: country.name.common,
+            value: country.name.common
+          }));
+          setCountries(countryList); // Set the country list in the state
+        } catch (error) {
+          console.error("Error fetching countries:", error);
+        } finally {
+          // setLoading(false);
+        }
+      };
+
 
 const allowedKitTypes = [
   "GI Axis Microbiome",
@@ -56,13 +326,14 @@ const oldkittypes = [
 
   useEffect(() => {
     fetchKittypes();
+    fetchCountries();
   }, []);
 
   const configMaker = (method, url, params = null, body = {}) => {
     return {
       method,
       maxBodyLength: Infinity,
-      url: `${"https://api.yourgutmap.co.uk"}/${url}`,
+      url: `${process.env.REACT_APP_API_URL}/${url}`,
       headers: {
         "Content-Type": "application/json",
         // "Access-Token": accessTokens,
@@ -102,7 +373,9 @@ const oldkittypes = [
     weight: "",
     weightUnit: "KG",
     height: "",
-    heightUnit: "FT",
+    heightUnit: "FT & Inch",
+    heightFeet: "",
+    heightInches: "",
     gender: "Male",
     country: "",
     kitType: "",
@@ -119,6 +392,7 @@ const oldkittypes = [
     diet: "",
     eatingHabits: "",
     antibiotics: "",
+    consent: "",
   });
 
   const [healthConditions, setHealthConditions] = useState([
@@ -261,9 +535,15 @@ const oldkittypes = [
       selected: false,
     },
     {
-      label: "Low Carbohydrate",
+      label: "Low Carbohydrates",
       icon: "/image53.svg",
       value: "low_carb",
+      selected: false,
+    },
+    {
+      label: "No specific diet",
+      // icon: "/image53.svg",
+      value: "No specific diet",
       selected: false,
     },
   ]);
@@ -283,7 +563,9 @@ const oldkittypes = [
     weight: "",
     weightUnit: "KG",
     height: "",
-    heightUnit: "FT",
+    heightUnit: "FT & Inch",
+    heightFeet: "",
+    heightInches: "",
     gender: "Male",
     country: "",
     kitType: "",
@@ -348,7 +630,18 @@ const oldkittypes = [
         formData.eatingHabits.length === 0
           ? "Please select at least one eating habit."
           : "",
+      consent: !consent ? "You must consent to the terms and conditions to submit" : "",
     };
+    
+    setErrors(nextErrors);
+    
+    if (Object.keys(nextErrors).some(key => nextErrors[key])) {
+      setIsSubmitted(false);
+      const firstKey = Object.keys(nextErrors).find(key => nextErrors[key]);
+      toast.error(nextErrors[firstKey]);
+      return;
+    }
+    
     let kitIdValue = formData.kitId;
     if (formData.kitType === "FoodSensitivityMap") {
       kitIdValue = `T4-${formData.kitId}-YGM`;
@@ -356,6 +649,10 @@ const oldkittypes = [
 
     const payload = {
       ...formData,
+      height:
+        formData.heightUnit === "FT & Inch"
+          ? `${formData.heightFeet}' ${formData.heightInches || 0}"`
+          : formData.height,
       kitId: kitIdValue, // yahan modified value bhejein
       antibioticTaken,
       healthConditions: healthConditions
@@ -364,14 +661,18 @@ const oldkittypes = [
       dietType: dietType.filter((d) => d.selected).map((d) => d.value),
       eatingHabits: eatingHabits.filter((e) => e.selected).map((e) => e.value),
     };
+    // Remove heightFeet and heightInches from payload as they're combined into height
+    delete payload.heightFeet;
+    delete payload.heightInches;
 
     try {
-      setShowThankYou(true); // Show success modal
       const response = await submitKitForm(payload);
       // console.log(payload); // ab yahan sahi value dikhegi
-      setFormData(initialFormState);
-
-      setHealthConditions([
+      
+      if(response.data.status === 1){
+        navigate("/registeryourkits/kitRegistered");
+        // Reset form states only on success
+        setHealthConditions([
         {
           label: "Irritable Bowel Syndrome",
           icon: "/image53.svg",
@@ -508,15 +809,34 @@ const oldkittypes = [
           value: "high_carb",
           selected: false,
         },
+        //Added new field
         {
-          label: "Low Carbohydrate",
+          label: "Low Carbohydrates",
           icon: "/image53.svg",
           value: "low_carb",
           selected: false,
         },
+        {
+      label: "No specific diet",
+      // icon: "/image53.svg",
+      value: "No specific diet",
+      selected: false,
+    },
       ]);
+      } else if (response.data.status === 0) {
+        console.log("Showing error modal", response.data);
+        setResponse(response.data);
+        setShowError(true);
+        setIsSubmitted(false);
+      }
     } catch (err) {
       console.error("Form submit failed", err);
+      setResponse({
+        httpStatus: err.response?.status || 500,
+        message: err.response?.data?.message || err.message || "An unexpected error occurred. Please try again later."
+      });
+      setShowError(true);
+      setIsSubmitted(false);
     }
   };
 
@@ -534,9 +854,10 @@ const oldkittypes = [
 
   return (
     <div className="new-microbiome-form-wrapper">
+      <Toaster position="top-center" reverseOrder={false} />
       <form className="new-microbiome-form" onSubmit={handleSubmit}>
         <div className="form-header-row">
-          <h2>Register your kit</h2>
+          <h2>Register your kits</h2>
           <p className="main-heading">
             GutHealth<span>Lab</span>
           </p>
@@ -576,15 +897,21 @@ const oldkittypes = [
           <div className="form-group weight-group">
             <label>Weight</label>
             <div className="row-flex">
-              <select
-                name="weightUnit"
-                value={formData.weightUnit}
-                onChange={handleChange}
-                required
-              >
-                <option>KG</option>
-                <option>LB</option>
-              </select>
+              <Select
+                value={{ label: formData.weightUnit, value: formData.weightUnit }}
+                onChange={(selectedOption) =>
+                  setFormData({
+                    ...formData,
+                    weightUnit: selectedOption.value
+                  })
+                }
+                options={[
+                  { label: "KG", value: "KG" },
+                  { label: "LB", value: "LB" }
+                ]}
+                styles={customSelectStyles}
+                isSearchable={false}
+              />
               <input
                 name="weight"
                 value={formData.weight}
@@ -596,81 +923,122 @@ const oldkittypes = [
           </div>
           <div className="form-group height-group">
             <label>Height</label>
-            <div className="row-flex">
-              <select
-                name="heightUnit"
-                value={formData.heightUnit}
-                onChange={handleChange}
-                required
-              >
-                <option>FT</option>
-                <option>CM</option>
-              </select>
-              <input
-                name="height"
-                value={formData.height}
-                onChange={handleChange}
-                placeholder="Height"
-                required
+            <div className="input-select-wrapper">
+              <Select
+                value={{ label: formData.heightUnit, value: formData.heightUnit }}
+                onChange={(selectedOption) =>
+                  setFormData({
+                    ...formData,
+                    heightUnit: selectedOption.value,
+                    height: "",
+                    heightFeet: "",
+                    heightInches: ""
+                  })
+                }
+                options={[
+                  { label: "FT & Inch", value: "FT & Inch" },
+                  { label: "CM", value: "CM" }
+                ]}
+                styles={customSelectStyles}
+                isSearchable={false}
               />
+              {formData.heightUnit === "FT & Inch" ? (
+                <div className="height-inputs-wrapper">
+                  <input
+                    name="heightFeet"
+                    type="number"
+                    value={formData.heightFeet}
+                    onChange={(e) =>
+                      setFormData({ ...formData, heightFeet: e.target.value })
+                    }
+                    placeholder="Feet"
+                    required
+                    className="second-row-input"
+                  />
+                  <input
+                    name="heightInches"
+                    type="number"
+                    value={formData.heightInches}
+                    onChange={(e) =>
+                      setFormData({ ...formData, heightInches: e.target.value })
+                    }
+                    placeholder="Inches"
+                    className="second-row-input"
+                  />
+                </div>
+              ) : (
+                <input
+                  name="height"
+                  type="number"
+                  value={formData.height}
+                  onChange={(e) =>
+                    setFormData({ ...formData, height: e.target.value })
+                  }
+                  placeholder="CM"
+                  required
+                  className="second-row-input"
+                />
+              )}
             </div>
           </div>
           <div className="form-group gender-group">
             <label>Gender at Birth</label>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            >
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
+            <Select
+              value={{ label: formData.gender, value: formData.gender }}
+              onChange={(selectedOption) =>
+                setFormData({
+                  ...formData,
+                  gender: selectedOption.value
+                })
+              }
+              options={[
+                { label: "Male", value: "Male" },
+                { label: "Female", value: "Female" },
+                { label: "Other", value: "Other" }
+              ]}
+              styles={customSelectStyles}
+              isSearchable={false}
+            />
           </div>
           <div className="form-group country-group">
             <label>Country of Residence</label>
-            <input
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              placeholder="country"
+            <Select
+              value={countries.find((country) => country.value === formData.country) || null}
+              onChange={(selectedOption) =>
+                setFormData({
+                  ...formData,
+                  country: selectedOption ? selectedOption.value : ""
+                })
+              }
+              options={countries}
+              placeholder="Select Country"
+              isSearchable
               required
+              styles={customSelectStyles}
             />
           </div>
           <div className="form-group kittype-group">
             <label>Kit Type</label>
-            <select
-              name="kitType"
-              value={formData.kitType}
-              onChange={handleChange}
-              required
-            >
-              {/* <option value="" disabled hidden>
-                Please Select KIT Type
-              </option>
-              {kitTypeOptions.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))} */}
-              <option value="" selected disabled >Please Select KIT Type</option>
-               {/* {
-                kitTypes?.map((value,index)=>{
-                 if (oldkittypes.includes(value)) return null;
-                  return (<option key={index} value={value}>{value}</option>)
+            <Select
+              value={
+                formData.kitType
+                  ? { label: formData.kitType, value: formData.kitType }
+                  : null
+              }
+              onChange={(selectedOption) =>
+                setFormData({
+                  ...formData,
+                  kitType: selectedOption ? selectedOption.value : ""
                 })
-               } */}
-               {allowedKitTypes
-  .filter(type => !oldkittypes.includes(type))   // remove old ones
-  .map((type, index) => (
-    <option key={index} value={type}>
-      {type}
-    </option>
-  ))
-}
-
-            </select>
+              }
+              options={allowedKitTypes
+                .filter(type => !oldkittypes.includes(type))
+                .map((type) => ({ label: type, value: type }))}
+              placeholder="Please Select KIT Type"
+              isSearchable
+              required
+              styles={customSelectStyles}
+            />
           </div>
           <div className="form-group kitid-group">
             <label>Kit ID</label>
@@ -714,9 +1082,6 @@ const oldkittypes = [
               <label>
                 Do you have any of the below health conditions or concerns?
               </label>
-              {errors.health && (
-                <div className="error-text">{errors.health}</div>
-              )}
               <div className="checkbox-grid">
                 {healthConditions.map((opt) => (
                   <PillToggle
@@ -728,10 +1093,12 @@ const oldkittypes = [
                   </PillToggle>
                 ))}
               </div>
+              {isSubmitted && errors.health && (
+                <div style={{ color: "#c62828", fontSize: "12px", marginTop: "6px" }}>{errors.health}</div>
+              )}
             </div>
             <div className="section">
               <label>What best describes your diet type?</label>
-              {errors.diet && <div className="error-text">{errors.diet}</div>}
               <div className="button-group">
                 {dietType.map((opt) => (
                   <PillToggle
@@ -743,12 +1110,12 @@ const oldkittypes = [
                   </PillToggle>
                 ))}
               </div>
+              {isSubmitted && errors.diet && (
+                <div style={{ color: "#c62828", fontSize: "12px", marginTop: "6px" }}>{errors.diet}</div>
+              )}
             </div>
             <div className="section">
               <label>Do you follow any of these eating habits?</label>
-              {errors.eatingHabits && (
-                <div className="error-text">{errors.eatingHabits}</div>
-              )}
               <div className="button-group">
                 {eatingHabits.map((opt) => (
                   <PillToggle
@@ -760,6 +1127,9 @@ const oldkittypes = [
                   </PillToggle>
                 ))}
               </div>
+              {isSubmitted && errors.eatingHabits && (
+                <div style={{ color: "#c62828", fontSize: "12px", marginTop: "6px" }}>{errors.eatingHabits}</div>
+              )}
             </div>
             <div className="section">
               <label>Have you taken antibiotics in the last 12 months?</label>
@@ -792,7 +1162,30 @@ const oldkittypes = [
                     <span>No</span>
                   </button>
                 </div>
-                <button type="submit" className="inline-submit">
+              </div>
+            </div>
+            <div className="section full-width">
+              <div className="consent-checkbox">
+                <label className="custom-checkbox">
+                  <input
+                    type="checkbox"
+                    className="checkinput2"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                  />
+                  <span className="checkmark"></span>
+                  <span className="consent-label-text">
+                    I consent to the terms and conditions and understand that
+                    anonymous test data is used to improve our gut health
+                    solutions.
+                  </span>
+                </label>
+              </div>
+              {isSubmitted && errors.consent && (
+                <div style={{ color: "#c62828", fontSize: "12px", marginTop: "6px" }}>{errors.consent}</div>
+              )}
+              <div style={{ marginTop: '20px' }}>
+                <button type="submit" className="inline-submit" style={{ width: '100%' }}>
                   Submit
                 </button>
               </div>
@@ -814,12 +1207,16 @@ const oldkittypes = [
           </div>
         )}
       </form>
-      <ThankYouModal
-        isOpen={showThankYou}
-        onClose={() => setShowThankYou(false)}
-        title="Thank you for registering your kit!"
-        message="You can now send your sample back to our laboratory following the directions in the instructions for use."
-      />
+      <ErrorModal
+                isOpen={showError}
+                onClose={() => setShowError(false)}
+                title="Failed to Submit"
+                errorCode={response?.httpStatus}
+                message={
+                  response?.message ||
+                  "There was an issue registering your Kit. Please try again or contact support."
+                }
+              />
     </div>
   );
 }

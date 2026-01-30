@@ -1,0 +1,98 @@
+/* Kit Registered Modal Styles */
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.modal-content {
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal-content .main-heading {
+  width: 100%;
+  
+}
+
+
+.modal-content p {
+  color: #666;
+}
+
+.modal-button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+
+}
+
+.modal-btn {
+  padding: 12px 28px;
+  display: flex;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+  align-items: center;
+}
+
+.modal-btn-primary {
+  background-color: #6dc2fc;
+  color: white;
+}
+
+.modal-btn-primary:hover {
+  background-color: #6dc2fc;
+}
+
+.modal-btn-secondary {
+  background-color:white;
+  color: #6dc2fc;
+  border: 2px solid #6dc2fc;
+}
+
+.modal-btn-secondary:hover {
+  background-color:whitesmoke;
+  border-color: #6dc2fc;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+  .modal-button-group {
+    gap: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modal-button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}

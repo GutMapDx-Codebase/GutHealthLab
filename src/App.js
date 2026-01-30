@@ -26,6 +26,7 @@ import NewMicrobiomeFormFull from "./pages/NewMicrobiomeForm.full";
 import SampleReturnForm from "./pages/SampleReturnForm";
 import RegisterYourFST from "./pages/registerYourFST";
 import Postage from "./pages/postage";
+import KitRegistered from "./pages/kitRegistered";
 
 
 
@@ -93,6 +94,7 @@ const AppContent = () => {
   
   <Route path="/new-microbiome-form" element={<NewMicrobiomeForm />} />
   <Route path="/registeryourkits" element={<NewMicrobiomeFormFull />} />
+  <Route path="/registeryourkits/kitRegistered" element={<KitRegistered />} />
   <Route path="/registeryourfst" element={<RegisterYourFST />} />
 
         <Route path="/samplereturn" element={<SampleReturnForm />} />
