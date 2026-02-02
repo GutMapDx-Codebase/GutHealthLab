@@ -648,22 +648,25 @@ const oldkittypes = [
     }
 
     const payload = {
-      ...formData,
+      name: formData.name,
+      email: formData.email,
+      dob: formData.dob,
+      gender: formData.gender,
       height:
         formData.heightUnit === "FT & Inch"
           ? `${formData.heightFeet}' ${formData.heightInches || 0}"`
           : formData.height,
-      kitId: kitIdValue, // yahan modified value bhejein
+      heightUnit: formData.heightUnit,
+      weightUnit: formData.weightUnit,
+      weight: formData.weight,
+      country: formData.country,
+      sampleDate: formData.sampleDate,
+      healthConditions: formData.health,
+      dietType: formData.diet ? [formData.diet] : [],
+      eatingHabits: formData.eatingHabits,
       antibioticTaken,
-      healthConditions: healthConditions
-        .filter((h) => h.selected)
-        .map((h) => h.value),
-      dietType: dietType.filter((d) => d.selected).map((d) => d.value),
-      eatingHabits: eatingHabits.filter((e) => e.selected).map((e) => e.value),
+      kitId: kitIdValue,
     };
-    // Remove heightFeet and heightInches from payload as they're combined into height
-    delete payload.heightFeet;
-    delete payload.heightInches;
 
     try {
       const response = await submitKitForm(payload);

@@ -26,12 +26,12 @@ const KitRegistered = () => {
           >
             Submit Another
           </button>
-          <a
+          {/* <a
             href="https://guthealthlab.co.uk/"
             className="modal-btn modal-btn-secondary"
           >
             Order Another Kit
-          </a>
+          </a> */}
         </div>
       </div>
     </div>
