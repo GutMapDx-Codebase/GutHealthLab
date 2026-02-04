@@ -355,16 +355,24 @@
   align-items: center;
   gap: 8px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .input-select-wrapper select {
   min-width: fit-content;
 }
 
+.input-select-wrapper > div:first-child {
+  min-width: fit-content;
+  max-width: fit-content;
+  flex: 0 1 auto;
+}
+
 .height-inputs-wrapper {
   display: flex;
   gap: 4px;
-  width: 100%;
+  /* flex: 1 1 auto; */
+  min-width: 0;
 }
 
 .height-inputs-wrapper input {
@@ -373,8 +381,8 @@
 }
 
 .input-select-wrapper .second-row-input {
-  /* flex: 1;
-   */
+  flex: 1;
+  
   min-width: 60px;
 }
 
