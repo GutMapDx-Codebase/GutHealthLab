@@ -354,7 +354,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 100%;
+  width: 80%;
   flex-wrap: wrap;
 }
 
@@ -695,7 +695,7 @@
   }
   
   .input-select-wrapper {
-    flex-wrap: nowrap;
+    /* flex-wrap: nowrap; */
   }
 }
 
