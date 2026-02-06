@@ -917,9 +917,10 @@ const oldkittypes = [
               />
               <input
                 name="weight"
+                type="number"
                 value={formData.weight}
                 onChange={handleChange}
-                placeholder="Weight"
+                placeholder={formData.weightUnit}
                 required
               />
             </div>
