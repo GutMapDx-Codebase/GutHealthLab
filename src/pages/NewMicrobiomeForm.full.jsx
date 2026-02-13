@@ -1216,8 +1216,11 @@ const oldkittypes = [
                 onClose={() => setShowError(false)}
                 title="Failed to Submit"
                 errorCode={response?.httpStatus}
+                // message={
+                //   response?.message ||
+                //   "There was an issue registering your Kit. Please try again or contact support."
+                // }
                 message={
-                  response?.message ||
                   "There was an issue registering your Kit. Please try again or contact support."
                 }
               />
