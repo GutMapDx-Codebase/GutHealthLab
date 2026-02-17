@@ -1021,7 +1021,7 @@ const oldkittypes = [
               styles={customSelectStyles}
             />
           </div>
-          <div className="form-group kittype-group">
+          {/* <div className="form-group kittype-group">
             <label>Kit Type</label>
             <Select
               value={
@@ -1043,7 +1043,7 @@ const oldkittypes = [
               required
               styles={customSelectStyles}
             />
-          </div>
+          </div> */}
           <div className="form-group kitid-group">
             <label>Kit ID</label>
             {formData.kitType === "FoodSensitivityMap" ? (

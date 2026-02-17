@@ -133,7 +133,7 @@
 
 .form-grid .kitid-group {
   grid-row: 2;
-  grid-column: 6;
+  /* grid-column: 6; */
 }
 
 @media (max-width: 1500px) {
