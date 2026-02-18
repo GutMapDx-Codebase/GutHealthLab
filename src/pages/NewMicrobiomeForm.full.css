@@ -88,14 +88,13 @@
 .form-grid .weight-group,
 .form-grid .height-group,
 .form-grid .gender-group,
-.form-grid .country-group,
-.form-grid .kitid-group {
+.form-grid .country-group {
   grid-row: 2;
 }
 
 .form-grid .name-group,
 .form-grid .email-group,
-.form-grid .dob-group {
+.form-grid .dob-group,.form-grid .kitid-group {
   grid-row: 1;
   grid-column: span 2;
 }
